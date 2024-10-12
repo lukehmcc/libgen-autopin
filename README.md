@@ -43,3 +43,5 @@ GLOBAL OPTIONS:
    --source value, -s value  FreeRead CID source (default: "https://pastebin.com/raw/HDVta9Tm")
    --help, -h                show help
 ```
+
+> Note: Repinning can take a long time, so I'd reccomend using a tool like [tmux](https://github.com/tmux/tmux) to make sure everything works well.
