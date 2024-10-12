@@ -37,7 +37,9 @@ COMMANDS:
    help, h  Shows a list of commands or help for one command
 
 GLOBAL OPTIONS:
-   --quota value, -q value  Storage quota allocated for pinning (GB) (default: 50)
-   --node value, -n value   IPFS Node (default: "http://127.0.0.1:5001")
-   --help, -h               show help
+   --quota value, -q value   Storage quota allocated for pinning (GB) (default: 50)
+   --node value, -n value    IPFS Node (default: "http://127.0.0.1:5001")
+   --version, -v             Get version number
+   --source value, -s value  FreeRead CID source (default: "https://pastebin.com/raw/HDVta9Tm")
+   --help, -h                show help
 ```

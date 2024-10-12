@@ -30,6 +30,9 @@ type Entry struct {
 	CID  string
 }
 
+// Version number
+const version = "0.1.0"
+
 func main() {
 	// init
 	fmt.Println("Welcome to libgen-autopin!")
@@ -39,6 +42,7 @@ func main() {
 		Name:  "libgen-autopin",
 		Usage: "easily re-pin libgen on IPFS",
 		Flags: []cli.Flag{
+			// TODO: Add --source flag
 			&cli.IntFlag{
 				Name:    "quota",
 				Aliases: []string{"q"},
@@ -51,10 +55,26 @@ func main() {
 				Value:   "http://127.0.0.1:5001",
 				Usage:   "IPFS Node",
 			},
+			&cli.BoolFlag{
+				Name:               "version",
+				Aliases:            []string{"v"},
+				Usage:              "Get version number",
+				DisableDefaultText: true,
+			},
+			&cli.StringFlag{
+				Name:    "source",
+				Aliases: []string{"s"},
+				Value:   "https://pastebin.com/raw/HDVta9Tm",
+				Usage:   "FreeRead CID source",
+			},
 		},
 		UsageText: "libgen-autopin [optional flags]",
 		Action: func(cCtx *cli.Context) error {
-			err := repinWithOptions(cCtx.String("node"), cCtx.Int("quota"))
+			if cCtx.Bool("version") {
+				fmt.Printf("version: %v\n", version)
+				os.Exit(0)
+			}
+			err := repinWithOptions(cCtx.String("node"), cCtx.Int("quota"), cCtx.String("source"))
 			if err != nil {
 				fmt.Println(err)
 				// fmt.Println("libgen-autopin: Invalid usage")
@@ -74,13 +94,12 @@ func main() {
 
 }
 
-func repinWithOptions(nodeURL string, quota int) error {
+func repinWithOptions(nodeURL string, quota int, source string) error {
 	s := spinner.New(spinner.CharSets[9], 100*time.Millisecond)
 	ma, err := ConvertHTTPToMultiaddr(nodeURL)
 	if err != nil {
 		return fmt.Errorf("failed to convert URI: %w", err)
 	}
-	// /ip4/100.83.11.72/tcp/5001
 
 	fmt.Println("✅ Converted Multiaddress:", ma)
 	node, err := rpc.NewApi(ma)
@@ -92,8 +111,7 @@ func repinWithOptions(nodeURL string, quota int) error {
 	ctx := context.Background()
 
 	// Fetch and parse the data
-	url := "https://pastebin.com/raw/HDVta9Tm"
-	entries := fetchAndParse(url)
+	entries := fetchAndParse(source)
 
 	// Randomly select entries until we fill the quota
 	selected, totalSize := randomSelect(entries, quota*1000)
@@ -135,7 +153,7 @@ func repinWithOptions(nodeURL string, quota int) error {
 		if err != nil {
 			return err
 		} else {
-			fmt.Println("Sucsessfully pinned: " + cid.String())
+			fmt.Println("\nSucsessfully pinned: " + cid.String())
 		}
 	}
 	s.Stop()
