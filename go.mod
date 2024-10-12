@@ -1,4 +1,4 @@
-module libgen-autopin
+module github.com/lukehmcc/libgen-autopin
 
 go 1.22.0
 
