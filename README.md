@@ -20,7 +20,7 @@ go build
 **Install through go**:
 
 ````
-go install github.com/lukehmcc/libgen-autopin/libgen-autopin@latest # or target a specific version```
+go install github.com/lukehmcc/libgen-autopin@latest # or target a specific version```
 ````
 
 ### Usage
